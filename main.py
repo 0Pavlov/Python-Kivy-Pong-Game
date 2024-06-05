@@ -47,13 +47,13 @@ Builder.load_string(
     PongPaddle:
         id: opponent
         center_x: root.width / 2
-        y: root.y + 100
+        y: root.y + 300
         color: 1, 1, 1, 1
 
     PongPaddle:
         id: player
         center_x: root.width / 2
-        y: root.top - self.height - 100
+        y: root.top - self.height - 300
         color: 0, 0, 0, 1
 
 <PongBall>:
@@ -138,22 +138,40 @@ class PongPaddle(Widget):
     score = NumericProperty(0)
 
     def bounce_ball(self, ball):
-        # 70 is the ball size defined in kv
+
+        """
+        IMPORTANT! Ball size is not changing dynamically and should be changed manually
+         and be equal to <PongBall> size from kv
+        """
+        # Ball size
+        size = 70
+
+        # Ball velocity
+        vx, vy = ball.vel[0], ball.vel[1]
+
+        # Ball direction based on its vertical velocity
+        ball_down = vy < 0
+        ball_up = vy > 0
+
+        # Ball bottom, top, left, right points coordinates
+        bottom_x, bottom_y = ball.center_x, ball.center_y - size
+        top_x, top_y = ball.center_x, ball.center_y + size
+        left_x, left_y = ball.center_x - size, ball.center_y
+        right_x, right_y = ball.center_x + size, ball.center_y
+
         if self.collide_widget(ball):
-            if (self.collide_point(
-                    ball.center_x, ball.center_y - 70
-            ) and ball.vel[1] < 0) or (self.collide_point(ball.center_x, ball.center_y + 70) and ball.vel[1] > 0):
-                vx, vy = ball.vel[0], ball.vel[1]
+
+            # Bounce of top and bottom paddles
+            if (self.collide_point(bottom_x, bottom_y) and ball_down
+                    or self.collide_point(top_x, top_y) and ball_up):
                 offset = (ball.center_y - self.center_y) / (self.height / 2)
                 bounced = Vector(vx, vy * -1)
                 vel = bounced * 1.1
                 ball.vel = vel[0] + offset, vel[1]
-            elif self.collide_point(
-                    ball.center_x - 70, ball.center_y
-            ) or self.collide_point(ball.center_x + 70, ball.center_y):
+
+            # Bounce of paddle sides
+            elif self.collide_point(left_x, left_y) or self.collide_point(right_x, right_y):
                 ball.vel = Vector(ball.vel[0] * -1, ball.vel[1])
-            else:
-                pass
 
 
 class PongApp(App):
