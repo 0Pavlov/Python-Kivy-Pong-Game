@@ -164,6 +164,7 @@ class PongPaddle(Widget):
                 or self.collide_point(top_x, top_y)
                 and ball_up
             ):
+                # Adjust the horizontal bounce based on contact point
                 offset = (ball.center_y - self.center_y) / (self.height / 2)
 
                 # Reverse vertical velocity
@@ -176,8 +177,9 @@ class PongPaddle(Widget):
                 ball.vel = vel[0] + offset, vel[1]
 
             # Bounce of paddle sides
-            elif self.collide_point(left_x, left_y) or self.collide_point(
-                right_x, right_y
+            elif (
+                self.collide_point(left_x, left_y)
+                or self.collide_point(right_x, right_y)
             ):
                 ball.vel = Vector(ball.vel[0] * -1, ball.vel[1])
 
