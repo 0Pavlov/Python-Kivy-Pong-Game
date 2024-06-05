@@ -57,7 +57,7 @@ Builder.load_string(
         color: 0, 0, 0, 1
 
 <PongBall>:
-    size: 70, 70
+    size: root.size
     canvas:
         Color:
             rgba: root.color
@@ -122,6 +122,7 @@ class PongGame(Widget):
 
 
 class PongBall(Widget):
+    size = ListProperty([70, 70])
     color = ListProperty([0.5, 0.5, 0.5, 1])
 
     # Ball velocity
@@ -139,12 +140,8 @@ class PongPaddle(Widget):
 
     def bounce_ball(self, ball):
 
-        """
-        IMPORTANT! Ball size is not changing dynamically and should be changed manually
-         and be equal to <PongBall> size from kv
-        """
-        # Ball size
-        size = 70
+        # Ball radius
+        radius = ball.size[0]
 
         # Ball velocity
         vx, vy = ball.vel[0], ball.vel[1]
@@ -154,10 +151,10 @@ class PongPaddle(Widget):
         ball_up = vy > 0
 
         # Ball bottom, top, left, right points coordinates
-        bottom_x, bottom_y = ball.center_x, ball.center_y - size
-        top_x, top_y = ball.center_x, ball.center_y + size
-        left_x, left_y = ball.center_x - size, ball.center_y
-        right_x, right_y = ball.center_x + size, ball.center_y
+        bottom_x, bottom_y = ball.center_x, ball.center_y - radius
+        top_x, top_y = ball.center_x, ball.center_y + radius
+        left_x, left_y = ball.center_x - radius, ball.center_y
+        right_x, right_y = ball.center_x + radius, ball.center_y
 
         if self.collide_widget(ball):
 
