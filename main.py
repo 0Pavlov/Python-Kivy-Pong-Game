@@ -157,13 +157,18 @@ class PongPaddle(Widget):
         right_x, right_y = ball.center_x + radius, ball.center_y
 
         if self.collide_widget(ball):
-
             # Bounce of top and bottom paddles
             if (self.collide_point(bottom_x, bottom_y) and ball_down
                     or self.collide_point(top_x, top_y) and ball_up):
                 offset = (ball.center_y - self.center_y) / (self.height / 2)
+
+                # Reverse vertical velocity
                 bounced = Vector(vx, vy * -1)
+
+                # Speed up on each bounce
                 vel = bounced * 1.1
+
+                # Apply changes
                 ball.vel = vel[0] + offset, vel[1]
 
             # Bounce of paddle sides
