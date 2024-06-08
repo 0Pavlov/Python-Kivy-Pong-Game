@@ -76,7 +76,7 @@ Builder.load_string(
         Rectangle:
             pos: self.pos
             size: self.size
-"""
+    """
 )
 
 
