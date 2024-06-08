@@ -21,7 +21,7 @@
 
 #### Explore my other projects on GitHub:
 
-  ### If I already done "Jena Music Voice Interface" project which I'm studying Kivy for, I recommend to check it as well.
+  - If I already done "Jena Music Voice Interface" project which I'm studying Kivy for, I recommend to check it as well.
 
 
 #### This Pong implementation was a great starting point for me to learn:
