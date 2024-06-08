@@ -99,6 +99,7 @@ class PongGame(Widget):
         self.ball.center = self.center
         self.ball.velocity = vel
 
+    # noinspection PyUnusedLocal
     def update(self, dt):
         """
         Update the screen each time Apps Clock inside the build method, ticks
