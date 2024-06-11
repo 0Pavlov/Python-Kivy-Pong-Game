@@ -71,7 +71,7 @@ Builder.load_string(
         # Size relative to the half of the screen
         font_size: root.height / 2 / 15
         size: self.texture_size
-        center_x: root.width / 2
+        x: root.width / 2 - self.width / 2
         # Vertical position relative to the half of the screen
         y: root.y
         text: '0'
@@ -82,7 +82,7 @@ Builder.load_string(
         # Size relative to the half of the screen
         font_size: root.height / 2 / 15
         size: self.texture_size
-        center_x: root.width / 2
+        x: root.width / 2 - self.width / 2
         # Vertical position relative to the half of the screen
         y: root.height - self.height
         text: '0'
