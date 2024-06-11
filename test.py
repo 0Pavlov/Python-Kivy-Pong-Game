@@ -73,7 +73,7 @@ Builder.load_string(
         size: self.texture_size
         x: root.width / 2 - self.width / 2
         # Vertical position relative to the half of the screen
-        y: root.y
+        y: root.y + self.height
         text: '0'
             
     Label:
@@ -84,7 +84,7 @@ Builder.load_string(
         size: self.texture_size
         x: root.width / 2 - self.width / 2
         # Vertical position relative to the half of the screen
-        y: root.height - self.height
+        y: root.height - self.height * 2
         text: '0'
         
     # Ball
@@ -101,7 +101,7 @@ Builder.load_string(
         size: self.parent.width / 6, self.parent.height / 2 / 18
         center_x: self.parent.width / 2
         # Vertical position relative to the player score
-        y: player_score.top + player_score.height / 2
+        y: player_score.top + player_score.height
         color: 1, 1, 1, 1
         
     PongPaddle:
@@ -110,7 +110,7 @@ Builder.load_string(
         size: self.parent.width / 6, self.parent.height / 2 / 18
         center_x: self.parent.width / 2
         # Vertical position relative to the opponent score
-        top: opponent_score.y - opponent_score.height / 2
+        top: opponent_score.y - opponent_score.height
         color: 0, 0, 0, 1
     """
 )
