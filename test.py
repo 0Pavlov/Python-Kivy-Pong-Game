@@ -70,9 +70,10 @@ Builder.load_string(
         color: 1, 1, 1, 1
         # Size relative to the half of the screen
         font_size: root.height / 2 / 15
+        size: self.texture_size
         center_x: root.width / 2
         # Vertical position relative to the half of the screen
-        y: root.y + root.height / 2 / 30
+        y: root.y
         text: '0'
             
     Label:
@@ -80,9 +81,10 @@ Builder.load_string(
         color: 0, 0, 0, 1
         # Size relative to the half of the screen
         font_size: root.height / 2 / 15
+        size: self.texture_size
         center_x: root.width / 2
         # Vertical position relative to the half of the screen
-        top: root.height - root.height / 2 / 30
+        y: root.height - self.height
         text: '0'
         
     # Ball
