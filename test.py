@@ -68,39 +68,48 @@ Builder.load_string(
     Label:
         id: player_score
         color: 1, 1, 1, 1
-        font_size: root.height / 30
+        # Size relative to the half of the screen
+        font_size: root.height / 2 / 15
         center_x: root.width / 2
-        y: root.y + root.height / 60
+        # Vertical position relative to the half of the screen
+        y: root.y + root.height / 2 / 30
         text: '0'
             
     Label:
         id: opponent_score
         color: 0, 0, 0, 1
-        font_size: root.height / 30
+        # Size relative to the half of the screen
+        font_size: root.height / 2 / 15
         center_x: root.width / 2
-        top: root.height - root.height / 60
+        # Vertical position relative to the half of the screen
+        top: root.height - root.height / 2 / 30
         text: '0'
         
     # Ball
     PongBall:
         id: pong_ball
         center: self.parent.center
+        # Size relative to the size of the screen
         size: self.parent.height / 30, self.parent.height / 30
         
     # Paddles
     PongPaddle:
         id: player
-        size: self.parent.width / 6, self.parent.height / 36
+        # Size relative to the half of the screen
+        size: self.parent.width / 6, self.parent.height / 2 / 18
         center_x: self.parent.width / 2
-        center_y: self.parent.y + self.parent.height / 26
-        color: 1, 1, 1, 1
+        # Vertical position relative to the half of the screen
+        center_y: self.parent.y + self.parent.height / 2 / 13
+        color: 1, 1, 1, 0
         
     PongPaddle:
         id: opponent
-        size: self.parent.width / 6, self.parent.height / 36
+        # Size relative to the half of the screen
+        size: self.parent.width / 6, self.parent.height / 2 / 18
         center_x: self.parent.width / 2
-        center_y: self.parent.top - self.parent.height / 26
-        color: 0, 0, 0, 1
+        # Vertical position relative to the half of the screen
+        center_y: self.parent.top - self.parent.height / 2 / 13
+        color: 0, 0, 0, 0
     """
 )
 
