@@ -100,18 +100,18 @@ Builder.load_string(
         # Size relative to the half of the screen
         size: self.parent.width / 6, self.parent.height / 2 / 18
         center_x: self.parent.width / 2
-        # Vertical position relative to the half of the screen
-        center_y: self.parent.y + self.parent.height / 2 / 13
-        color: 1, 1, 1, 0
+        # Vertical position relative to the player score
+        y: player_score.top + player_score.height / 2
+        color: 1, 1, 1, 1
         
     PongPaddle:
         id: opponent
         # Size relative to the half of the screen
         size: self.parent.width / 6, self.parent.height / 2 / 18
         center_x: self.parent.width / 2
-        # Vertical position relative to the half of the screen
-        center_y: self.parent.top - self.parent.height / 2 / 13
-        color: 0, 0, 0, 0
+        # Vertical position relative to the opponent score
+        top: opponent_score.y - opponent_score.height / 2
+        color: 0, 0, 0, 1
     """
 )
 
