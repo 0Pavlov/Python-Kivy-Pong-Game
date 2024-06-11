@@ -21,9 +21,21 @@ Builder.load_string(
         Ellipse:
             pos: self.pos
             size: self.size
+            
+<PongPaddle>:
+    id: pong_paddle
+    score: root.score
+    canvas:
+        Color:
+            rgba: root.color
+        Rectangle:
+            pos: self.pos
+            size: self.size
     
 <PongGame>:
     ball: pong_ball
+    player: player
+    opponent: opponent
     # Backgrounds
     canvas:
         # Player background
@@ -74,6 +86,21 @@ Builder.load_string(
         id: pong_ball
         center: self.parent.center
         size: self.parent.height / 30, self.parent.height / 30
+        
+    # Paddles
+    PongPaddle:
+        id: player
+        size: self.parent.width / 6, self.parent.height / 36
+        center_x: self.parent.width / 2
+        center_y: self.parent.y + self.parent.height / 26
+        color: 1, 1, 1, 1
+        
+    PongPaddle:
+        id: opponent
+        size: self.parent.width / 6, self.parent.height / 36
+        center_x: self.parent.width / 2
+        center_y: self.parent.top - self.parent.height / 26
+        color: 0, 0, 0, 1
     """
 )
 
@@ -136,7 +163,8 @@ class PongGame(Widget):
             self.pos = Vector(*self.pos) + self.velocity
 
     class PongPaddle(Widget):
-        pass
+        color = ListProperty([1, 0, 0, 1])
+        score = NumericProperty(0)
 
 
 # App class (build method should return root widget object)
