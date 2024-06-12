@@ -74,7 +74,7 @@ Builder.load_string(
         x: root.width / 2 - self.width / 2
         # Vertical position relative to the half of the screen
         y: root.y + self.height
-        text: '0'
+        text: str(root.player.score)
 
     Label:
         id: opponent_score
@@ -85,7 +85,7 @@ Builder.load_string(
         x: root.width / 2 - self.width / 2
         # Vertical position relative to the half of the screen
         y: root.height - self.height * 2
-        text: '0'
+        text: str(root.opponent.score)
 
     # Ball
     PongBall:
@@ -120,6 +120,8 @@ Builder.load_string(
 # Serves as the root widget
 class PongGame(Widget):
     ball = ObjectProperty(None)
+    player = ObjectProperty(None)
+    opponent = ObjectProperty(None)
     state_game_started = False
     state_game_over = False
 
@@ -131,15 +133,24 @@ class PongGame(Widget):
         to ensure that it happens after the initial layout is calculated. This
         prevents issues with incorrect ball positioning.
         """
-        Clock.schedule_once(self.serve_ball, 0.4)
+        Clock.schedule_once(self.center_ball_on_init, 0.4)
+        self.serve_ball(vel=(4, -4))  # Initial serve
 
     # noinspection PyUnusedLocal
-    def serve_ball(self, dt, vel=(0, 4)):
+    def center_ball_on_init(self, dt):
+        """
+        Center the ball
+
+        Args:
+            dt(float): delta time parameter, used during the __init__
+        """
+        self.ball.center = self.center
+
+    def serve_ball(self, vel=(4, 4)):
         """
         Serve the ball to some direction
 
         Args:
-            dt(float): delta time parameter, used during the __init__
             vel (tuple): Direction to serve the ball
         """
         self.ball.center = self.center
@@ -160,8 +171,12 @@ class PongGame(Widget):
             self.ball.velocity_x *= -1
 
         # Bounce ball off top or bottom
-        if self.ball.y < self.y or self.ball.top > self.top:
-            self.ball.velocity_y *= -1
+        if self.ball.top > self.top:  # Top
+            self.serve_ball(vel=(0, 4))
+            self.player.score += 1
+        if self.ball.y < self.y:
+            self.serve_ball(vel=(0, -4))
+            self.opponent.score += 1
 
         # Change ball color based on its position
         if self.ball.center_y > self.center_y:
