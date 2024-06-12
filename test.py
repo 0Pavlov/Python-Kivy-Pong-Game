@@ -133,6 +133,7 @@ class PongGame(Widget):
         """
         Clock.schedule_once(self.serve_ball, 0.4)
 
+    # noinspection PyUnusedLocal
     def serve_ball(self, dt, vel=(0, 4)):
         """
         Serve the ball to some direction
