@@ -21,7 +21,7 @@ Builder.load_string(
         Ellipse:
             pos: self.pos
             size: self.size
-            
+     
 <PongPaddle>:
     id: pong_paddle
     score: root.score
@@ -31,7 +31,7 @@ Builder.load_string(
         Rectangle:
             pos: self.pos
             size: self.size
-    
+
 <PongGame>:
     ball: pong_ball
     player: player
@@ -55,7 +55,7 @@ Builder.load_string(
             id: opponent_background
             pos: 0, self.height / 2 # Screen top half
             size: self.width, self.height / 2
-            
+
         # Screen center line (debug)
         Color:
             rgba: 1, 0, 0, 0
@@ -63,7 +63,7 @@ Builder.load_string(
             id: split_line
             pos: self.width / 2, self.y
             size: 1, self.height
-    
+
     # Score labels        
     Label:
         id: player_score
@@ -75,7 +75,7 @@ Builder.load_string(
         # Vertical position relative to the half of the screen
         y: root.y + self.height
         text: '0'
-            
+
     Label:
         id: opponent_score
         color: 0, 0, 0, 1
@@ -86,14 +86,14 @@ Builder.load_string(
         # Vertical position relative to the half of the screen
         y: root.height - self.height * 2
         text: '0'
-        
+
     # Ball
     PongBall:
         id: pong_ball
         center: self.parent.center
         # Size relative to the size of the screen
         size: self.parent.height / 30, self.parent.height / 30
-        
+
     # Paddles
     PongPaddle:
         id: player
@@ -103,7 +103,7 @@ Builder.load_string(
         # Vertical position relative to the player score
         y: player_score.top + player_score.height
         color: 1, 1, 1, 1
-        
+
     PongPaddle:
         id: opponent
         # Size relative to the half of the screen
@@ -125,14 +125,21 @@ class PongGame(Widget):
 
     def __init__(self, **kwargs):
         super(PongGame, self).__init__(**kwargs)
-        self.serve_ball()
+        """
+        Call the serve_ball function only after the layout is calculated.
+        The ball serving is scheduled for the next frame using Clock.schedule_once()
+        to ensure that it happens after the initial layout is calculated. This
+        prevents issues with incorrect ball positioning.
+        """
+        Clock.schedule_once(self.serve_ball, 0.4)
 
-    def serve_ball(self, vel=(4, 4)):
+    def serve_ball(self, dt, vel=(0, 4)):
         """
         Serve the ball to some direction
 
         Args:
-             vel (tuple): Direction to serve the ball
+            dt(float): delta time parameter, used during the __init__
+            vel (tuple): Direction to serve the ball
         """
         self.ball.center = self.center
         self.ball.velocity = vel
