@@ -128,7 +128,7 @@ class PongGame(Widget):
     def __init__(self, **kwargs):
         super(PongGame, self).__init__(**kwargs)
         """
-        Call the serve_ball function only after the layout is calculated.
+        Call the center_ball_on_init function only after the layout is calculated.
         The ball serving is scheduled for the next frame using Clock.schedule_once()
         to ensure that it happens after the initial layout is calculated. This
         prevents issues with incorrect ball positioning.
