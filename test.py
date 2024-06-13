@@ -166,16 +166,20 @@ class PongGame(Widget):
         """
         self.ball.move()
 
+        # Bounce off paddles
+        self.player.bounce_ball(self.ball)
+        self.opponent.bounce_ball(self.ball)
+
         # Bounce ball off sides
         if self.ball.x < self.x or self.ball.right > self.right:
             self.ball.velocity_x *= -1
 
         # Bounce ball off top or bottom
         if self.ball.top > self.top:  # Top
-            self.serve_ball(vel=(0, 4))
+            self.serve_ball(vel=(4, 4))
             self.player.score += 1
         if self.ball.y < self.y:
-            self.serve_ball(vel=(0, -4))
+            self.serve_ball(vel=(4, -4))
             self.opponent.score += 1
 
         # Change ball color based on its position
@@ -199,6 +203,23 @@ class PongGame(Widget):
     class PongPaddle(Widget):
         color = ListProperty([1, 0, 0, 1])
         score = NumericProperty(0)
+
+        def bounce_ball(self, ball):
+            if self.collide_widget(ball):
+                # Ball velocity
+                vx, vy = ball.velocity
+
+                # Adjust the horizontal bounce based on contact point
+                offset = (ball.center_y - self.center_y) / (self.height / 2)
+
+                # Reverse vertical velocity
+                bounced = Vector(vx, vy * -1)
+
+                # Speed up on each bounce
+                vel = bounced * 1.1
+
+                # Apply changes
+                ball.velocity = vel.x, vel.y + offset
 
 
 # App class (build method should return root widget object)
