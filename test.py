@@ -188,6 +188,13 @@ class PongGame(Widget):
         elif self.ball.center_y < self.center_y:
             self.ball.color = [1, 1, 1, 1]
 
+    # Make paddles movable
+    def on_touch_move(self, touch):
+        if touch.y < self.height / 2:
+            self.player.center_x = touch.x
+        if touch.y > self.height - self.height / 2:
+            self.opponent.center_x = touch.x
+
     class PongBall(Widget):
         color = ListProperty([0, 0, 0, 0])
         velocity_x = NumericProperty(0)
