@@ -221,6 +221,8 @@ class PongGame(Widget):
 
             # Game end condition
             if self.opponent.score == 3 or self.player.score == 3:
+                # Hide the ball when game waits for restart
+                self.ball.color = [0, 0, 0, 0]
                 # Update the game state
                 self.state_game_started = False
                 # Bring the menu back from the out the screen
