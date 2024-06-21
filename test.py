@@ -13,6 +13,16 @@ from kivy.clock import Clock
 
 Builder.load_string(
     """
+<Menu>:
+    size: self.size
+    center: root.parent.center
+    canvas:
+        Color:
+            rgba: self.color
+        Ellipse:
+            size: self.size
+            pos: self.pos
+
 <PongBall>:
     size: self.size
     canvas:
@@ -21,7 +31,7 @@ Builder.load_string(
         Ellipse:
             pos: self.pos
             size: self.size
-     
+
 <PongPaddle>:
     id: pong_paddle
     score: root.score
@@ -36,6 +46,7 @@ Builder.load_string(
     ball: pong_ball
     player: player
     opponent: opponent
+    menu: menu
     # Backgrounds
     canvas:
         # Player background
@@ -112,6 +123,17 @@ Builder.load_string(
         # Vertical position relative to the opponent score
         top: opponent_score.y - opponent_score.height
         color: 0, 0, 0, 1
+
+    # Menu
+    Menu:
+        id: menu
+        size: self.parent.width / 3, self.parent.width / 3
+        color: [.2, .2, .2, 0.5]
+        Label:
+            color: 1, 1, 1, 0.7
+            font_size: self.parent.width / 3
+            text: 'Touch'
+            center: menu.center
     """
 )
 
@@ -122,6 +144,7 @@ class PongGame(Widget):
     ball = ObjectProperty(None)
     player = ObjectProperty(None)
     opponent = ObjectProperty(None)
+    menu = ObjectProperty(None)
     state_game_started = False
     state_game_over = False
 
@@ -164,29 +187,40 @@ class PongGame(Widget):
         Args:
             dt (delta-time): How often the screen updates
         """
-        self.ball.move()
+        if self.state_game_started:
+            self.menu.x = 99999
+            self.ball.move()
 
-        # Bounce off paddles
-        self.player.bounce_ball(self.ball)
-        self.opponent.bounce_ball(self.ball)
+            # Bounce off paddles
+            self.player.bounce_ball(self.ball)
+            self.opponent.bounce_ball(self.ball)
 
-        # Bounce ball off sides
-        if self.ball.x < self.x or self.ball.right > self.right:
-            self.ball.velocity_x *= -1
+            # Bounce ball off sides
+            if self.ball.x < self.x or self.ball.right > self.right:
+                self.ball.velocity_x *= -1
 
-        # Bounce ball off top or bottom
-        if self.ball.top > self.top:  # Top
-            self.serve_ball(vel=(4, 4))
-            self.player.score += 1
-        if self.ball.y < self.y:
-            self.serve_ball(vel=(4, -4))
-            self.opponent.score += 1
+            # Bounce ball off top or bottom
+            if self.ball.top > self.top:  # Top
+                self.serve_ball(vel=(4, 4))
+                self.player.score += 1
+            if self.ball.y < self.y:
+                self.serve_ball(vel=(4, -4))
+                self.opponent.score += 1
 
-        # Change ball color based on its position
-        if self.ball.center_y > self.center_y:
-            self.ball.color = [0, 0, 0, 1]
-        elif self.ball.center_y < self.center_y:
-            self.ball.color = [1, 1, 1, 1]
+            # Change ball color based on its position
+            if self.ball.center_y > self.center_y:
+                self.ball.color = [0, 0, 0, 1]
+            elif self.ball.center_y < self.center_y:
+                self.ball.color = [1, 1, 1, 1]
+            if self.opponent.score == 3 or self.player.score == 3:
+                self.state_game_started = False
+                self.menu.center = self.center
+                if self.opponent.score == 3:
+                    self.opponent.score = 999
+                    self.player.score = 228
+                elif self.player.score == 3:
+                    self.player.score = 999
+                    self.opponent.score = 228
 
     # Make paddles movable
     def on_touch_move(self, touch):
@@ -194,6 +228,15 @@ class PongGame(Widget):
             self.player.center_x = touch.x
         if touch.y > self.height - self.height / 2:
             self.opponent.center_x = touch.x
+
+    def on_touch_down(self, touch):
+        if self.menu.collide_point(*touch.pos):
+            self.state_game_started = True
+            self.opponent.score = 0
+            self.player.score = 0
+
+    class Menu(Widget):
+        color = ListProperty([0, 0, 0, 0])
 
     class PongBall(Widget):
         color = ListProperty([0, 0, 0, 0])
