@@ -127,12 +127,16 @@ Builder.load_string(
     # Menu
     Menu:
         id: menu
+        # Size of the circle relative to screen width
         size: self.parent.width / 3, self.parent.width / 3
-        color: [.2, .2, .2, 0.5]
+        color: [0.2, 0.2, 0.2, 0.5] # Dark grey color
+        # Text
         Label:
             color: 1, 1, 1, 0.7
+            # Font size matches the circle size
             font_size: self.parent.width / 3
             text: 'Touch'
+            # Centering the text only after defining size and the content
             center: menu.center
     """
 )
@@ -146,7 +150,6 @@ class PongGame(Widget):
     opponent = ObjectProperty(None)
     menu = ObjectProperty(None)
     state_game_started = False
-    state_game_over = False
 
     def __init__(self, **kwargs):
         super(PongGame, self).__init__(**kwargs)
@@ -188,7 +191,10 @@ class PongGame(Widget):
             dt (delta-time): How often the screen updates
         """
         if self.state_game_started:
+            # Moving the menu button away the screen during gameplay
             self.menu.x = 99999
+
+            # Move the ball each frame
             self.ball.move()
 
             # Bounce off paddles
@@ -212,15 +218,19 @@ class PongGame(Widget):
                 self.ball.color = [0, 0, 0, 1]
             elif self.ball.center_y < self.center_y:
                 self.ball.color = [1, 1, 1, 1]
+
+            # Game end condition
             if self.opponent.score == 3 or self.player.score == 3:
+                # Update the game state
                 self.state_game_started = False
+                # Bring the menu back from the out the screen
                 self.menu.center = self.center
-                if self.opponent.score == 3:
-                    self.opponent.score = 999
-                    self.player.score = 228
-                elif self.player.score == 3:
-                    self.player.score = 999
-                    self.opponent.score = 228
+                # Do something if player wins
+                if self.player.score == 3:
+                    pass
+                # Do something if opponent wins
+                elif self.opponent.score == 3:
+                    pass
 
     # Make paddles movable
     def on_touch_move(self, touch):
@@ -229,9 +239,12 @@ class PongGame(Widget):
         if touch.y > self.height - self.height / 2:
             self.opponent.center_x = touch.x
 
+    # Register the touch for the menu button
     def on_touch_down(self, touch):
         if self.menu.collide_point(*touch.pos):
+            # Update the game state
             self.state_game_started = True
+            # Reset the scores
             self.opponent.score = 0
             self.player.score = 0
 
