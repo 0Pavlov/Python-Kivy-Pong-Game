@@ -128,13 +128,13 @@ Builder.load_string(
     Menu:
         id: menu
         # Size of the circle relative to screen width
-        size: self.parent.width / 3, self.parent.width / 3
+        size: self.parent.width / 4, self.parent.width / 4
         color: [0.2, 0.2, 0.2, 0.5] # Dark grey color
         # Text
         Label:
             color: 1, 1, 1, 0.7
             # Font size matches the circle size
-            font_size: self.parent.width / 3
+            font_size: self.parent.width / 4
             text: 'Touch'
             # Centering the text only after defining size and the content
             center: menu.center
