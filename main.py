@@ -1,5 +1,6 @@
 from kivy.app import App
 from kivy.uix.widget import Widget
+# noinspection PyProtectedMember
 from kivy.app import Builder
 from kivy.properties import (
     NumericProperty,
@@ -12,55 +13,21 @@ from kivy.clock import Clock
 
 Builder.load_string(
     """
-<PongGame>:
-    ball: pong_ball
-    player: player
-    opponent: opponent
-
+<Menu>:
+    size: self.size
+    center: root.parent.center
     canvas:
         Color:
-            rgba: 1, 1, 1, 1    
-        Rectangle:
-            id: background
-            size: self.width, self.height / 2
-            pos: 0, self.height / 2
-
-    Label:
-        id: opponent_score
-        font_size: 70
-        color: 0, 0, 0, 1
-        center_x: root.width / 2
-        center_y: root.top - 100
-        text: str(root.player.score)
-
-    Label:
-        id: player_score
-        font_size: 70
-        center_x: root.width / 2
-        center_y: root.y + 100
-        text: str(root.opponent.score)
-
-    PongBall:
-        id: pong_ball
-        center: self.parent.center
-
-    PongPaddle:
-        id: opponent
-        center_x: root.width / 2
-        y: root.y + 300
-        color: 1, 1, 1, 1
-
-    PongPaddle:
-        id: player
-        center_x: root.width / 2
-        y: root.top - self.height - 300
-        color: 0, 0, 0, 1
+            rgba: self.color
+        Ellipse:
+            size: self.size
+            pos: self.pos
 
 <PongBall>:
-    size: root.size
+    size: self.size
     canvas:
         Color:
-            rgba: root.color
+            rgba: self.color
         Ellipse:
             pos: self.pos
             size: self.size
@@ -68,102 +35,245 @@ Builder.load_string(
 <PongPaddle>:
     id: pong_paddle
     score: root.score
-    size: 200, 50
-    on_score: self.size[0] -= 50
     canvas:
         Color:
             rgba: root.color
         Rectangle:
             pos: self.pos
             size: self.size
+
+<PongGame>:
+    ball: pong_ball
+    player: player
+    opponent: opponent
+    menu: menu
+    # Backgrounds
+    canvas:
+        # Player background
+        Color:
+            rgba: 0, 0, 0, 1
+        # Player background rectangle
+        Rectangle:
+            id: player_background
+            pos: 0, 0  # Screen bottom half
+            size: self.width, self.height / 2
+
+        # Opponent background
+        Color:
+            rgba: 1, 1, 1, 1
+        # Opponent background rectangle
+        Rectangle:
+            id: opponent_background
+            pos: 0, self.height / 2 # Screen top half
+            size: self.width, self.height / 2
+
+        # Screen center line (debug)
+        Color:
+            rgba: 1, 0, 0, 0
+        Rectangle:
+            id: split_line
+            pos: self.width / 2, self.y
+            size: 1, self.height
+
+    # Score labels        
+    Label:
+        id: player_score
+        color: 1, 1, 1, 1
+        # Size relative to the half of the screen
+        font_size: root.height / 2 / 15
+        size: self.texture_size
+        x: root.width / 2 - self.width / 2
+        # Vertical position relative to the half of the screen
+        y: root.y + self.height
+        text: str(root.player.score)
+
+    Label:
+        id: opponent_score
+        color: 0, 0, 0, 1
+        # Size relative to the half of the screen
+        font_size: root.height / 2 / 15
+        size: self.texture_size
+        x: root.width / 2 - self.width / 2
+        # Vertical position relative to the half of the screen
+        y: root.height - self.height * 2
+        text: str(root.opponent.score)
+
+    # Ball
+    PongBall:
+        id: pong_ball
+        center: self.parent.center
+        # Size relative to the size of the screen
+        size: self.parent.height / 30, self.parent.height / 30
+
+    # Paddles
+    PongPaddle:
+        id: player
+        # Size relative to the half of the screen
+        size: self.parent.width / 6, self.parent.height / 2 / 18
+        center_x: self.parent.width / 2
+        # Vertical position relative to the player score
+        y: player_score.top + player_score.height
+        color: 1, 1, 1, 1
+
+    PongPaddle:
+        id: opponent
+        # Size relative to the half of the screen
+        size: self.parent.width / 6, self.parent.height / 2 / 18
+        center_x: self.parent.width / 2
+        # Vertical position relative to the opponent score
+        top: opponent_score.y - opponent_score.height
+        color: 0, 0, 0, 1
+
+    # Menu
+    Menu:
+        id: menu
+        # Size of the circle relative to screen width
+        size: self.parent.width / 4, self.parent.width / 4
+        color: [0.2, 0.2, 0.2, 0.5] # Dark grey color
+        # Text
+        Label:
+            color: 1, 1, 1, 0.7
+            # Font size matches the circle size
+            font_size: self.parent.width / 4
+            text: 'Touch'
+            # Centering the text only after defining size and the content
+            center: menu.center
     """
 )
 
 
+# Main game class (all game logic goes here)
+# Serves as the root widget
 class PongGame(Widget):
+    ball = ObjectProperty(None)
     player = ObjectProperty(None)
     opponent = ObjectProperty(None)
-    ball = ObjectProperty(None)
+    menu = ObjectProperty(None)
+    state_game_started = False
 
-    def change_color(self):
-        if self.ball.center_y > self.center_y:
-            self.ball.color = [0, 0, 0, 1]
-        elif self.ball.center_y < self.center_y:
-            self.ball.color = [1, 1, 1, 1]
+    def __init__(self, **kwargs):
+        super(PongGame, self).__init__(**kwargs)
+        """
+        Call the center_ball_on_init function only after the layout is calculated.
+        The ball serving is scheduled for the next frame using Clock.schedule_once()
+        to ensure that it happens after the initial layout is calculated. This
+        prevents issues with incorrect ball positioning.
+        """
+        Clock.schedule_once(self.center_ball_on_init, 0.4)
+        self.serve_ball(vel=(4, -4))  # Initial serve
 
-    def serve_ball(self, vel=(0, 4)):
+    # noinspection PyUnusedLocal
+    def center_ball_on_init(self, dt):
+        """
+        Center the ball
+
+        Args:
+            dt(float): delta time parameter, used during the __init__
+        """
         self.ball.center = self.center
-        self.ball.vel = vel
 
+    def serve_ball(self, vel=(4, 4)):
+        """
+        Serve the ball to some direction
+
+        Args:
+            vel (tuple): Direction to serve the ball
+        """
+        self.ball.center = self.center
+        self.ball.velocity = vel
+
+    # noinspection PyUnusedLocal
     def update(self, dt):
-        self.change_color()
-        self.ball.move()
+        """
+        Update the screen each time Apps Clock inside the build method, ticks
 
-        # Bounce off paddles
-        self.player.bounce_ball(self.ball)
-        self.opponent.bounce_ball(self.ball)
+        Args:
+            dt (delta-time): How often the screen updates
+        """
+        if self.state_game_started:
+            # Moving the menu button away the screen during gameplay
+            self.menu.x = 99999
 
-        # Bounce x
-        if self.ball.x < 0 or self.ball.right > self.width:
-            self.ball.vel_x *= -1
-        # Bounce y
-        if self.ball.top > self.height:
-            self.opponent.score += 1
-            self.serve_ball(vel=(0, 4))
-        if self.ball.y < self.y:
-            self.player.score += 1
-            self.serve_ball(vel=(0, -4))
+            # Move the ball each frame
+            self.ball.move()
 
+            # Bounce off paddles
+            self.player.bounce_ball(self.ball)
+            self.opponent.bounce_ball(self.ball)
+
+            # Bounce ball off sides
+            if self.ball.x < self.x or self.ball.right > self.right:
+                self.ball.velocity_x *= -1
+
+            # Bounce ball off top or bottom
+            if self.ball.top > self.top:  # Top
+                self.serve_ball(vel=(4, 4))
+                self.player.score += 1
+            if self.ball.y < self.y:
+                self.serve_ball(vel=(4, -4))
+                self.opponent.score += 1
+
+            # Change ball color based on its position
+            if self.ball.center_y > self.center_y:
+                self.ball.color = [0, 0, 0, 1]
+            elif self.ball.center_y < self.center_y:
+                self.ball.color = [1, 1, 1, 1]
+
+            # Game end condition
+            if self.opponent.score == 3 or self.player.score == 3:
+                # Hide the ball when game waits for restart
+                self.ball.color = [0, 0, 0, 0]
+                # Update the game state
+                self.state_game_started = False
+                # Bring the menu back from the out the screen
+                self.menu.center = self.center
+                # Do something if player wins
+                if self.player.score == 3:
+                    pass
+                # Do something if opponent wins
+                elif self.opponent.score == 3:
+                    pass
+
+    # Make paddles movable
     def on_touch_move(self, touch):
         if touch.y < self.height / 2:
-            self.opponent.center_x = touch.x
-        if touch.y > self.height - self.height / 2:
             self.player.center_x = touch.x
+        if touch.y > self.height - self.height / 2:
+            self.opponent.center_x = touch.x
 
+    # Register the touch for the menu button
+    def on_touch_down(self, touch):
+        if self.menu.collide_point(*touch.pos):
+            # Update the game state
+            self.state_game_started = True
+            # Reset the scores
+            self.opponent.score = 0
+            self.player.score = 0
 
-class PongBall(Widget):
-    size = ListProperty([70, 70])
-    color = ListProperty([0.5, 0.5, 0.5, 1])
+    class Menu(Widget):
+        color = ListProperty([0, 0, 0, 0])
 
-    # Ball velocity
-    vel_x = NumericProperty(0)
-    vel_y = NumericProperty(0)
-    vel = ReferenceListProperty(vel_x, vel_y)
+    class PongBall(Widget):
+        color = ListProperty([0, 0, 0, 0])
+        velocity_x = NumericProperty(0)
+        velocity_y = NumericProperty(0)
+        velocity = ReferenceListProperty(velocity_x, velocity_y)
 
-    def move(self):
-        self.pos = Vector(*self.vel) + self.pos
+        def move(self):
+            """
+            Move the ball from the current position with the current velocity
+            """
+            self.pos = Vector(*self.pos) + self.velocity
 
+    class PongPaddle(Widget):
+        color = ListProperty([1, 0, 0, 1])
+        score = NumericProperty(0)
 
-class PongPaddle(Widget):
-    color = ListProperty([1, 1, 1, 1])
-    score = NumericProperty(0)
+        def bounce_ball(self, ball):
+            if self.collide_widget(ball):
+                # Ball velocity
+                vx, vy = ball.velocity
 
-    def bounce_ball(self, ball):
-
-        # Ball radius
-        radius = ball.size[0]
-
-        # Ball velocity
-        vx, vy = ball.vel[0], ball.vel[1]
-
-        # Ball direction based on its vertical velocity
-        ball_down = vy < 0
-        ball_up = vy > 0
-
-        # Ball bottom, top, left, right points coordinates
-        bottom_x, bottom_y = ball.center_x, ball.center_y - radius
-        top_x, top_y = ball.center_x, ball.center_y + radius
-        left_x, left_y = ball.center_x - radius, ball.center_y
-        right_x, right_y = ball.center_x + radius, ball.center_y
-
-        if self.collide_widget(ball):
-            # Bounce of top and bottom paddles
-            if (
-                self.collide_point(bottom_x, bottom_y)
-                and ball_down
-                or self.collide_point(top_x, top_y)
-                and ball_up
-            ):
                 # Adjust the horizontal bounce based on contact point
                 offset = (ball.center_y - self.center_y) / (self.height / 2)
 
@@ -174,20 +284,13 @@ class PongPaddle(Widget):
                 vel = bounced * 1.1
 
                 # Apply changes
-                ball.vel = vel[0] + offset, vel[1]
-
-            # Bounce of paddle sides
-            elif (
-                self.collide_point(left_x, left_y)
-                or self.collide_point(right_x, right_y)
-            ):
-                ball.vel = Vector(ball.vel[0] * -1, ball.vel[1])
+                ball.velocity = vel.x, vel.y + offset
 
 
+# App class (build method should return root widget object)
 class PongApp(App):
     def build(self):
         game = PongGame()
-        game.serve_ball()
         Clock.schedule_interval(game.update, 1.0 / 120.0)
         return game
 
