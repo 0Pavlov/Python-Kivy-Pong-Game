@@ -205,11 +205,11 @@ class PongGame(Widget):
             if self.ball.x < self.x or self.ball.right > self.right:
                 self.ball.velocity_x *= -1
 
-            # Bounce ball off top or bottom
+            # Ball collision with the top or bottom of the screen
             if self.ball.top > self.top:  # Top
                 self.serve_ball(vel=(4, 4))
                 self.player.score += 1
-            if self.ball.y < self.y:
+            if self.ball.y < self.y:  # Bottom
                 self.serve_ball(vel=(4, -4))
                 self.opponent.score += 1
 
