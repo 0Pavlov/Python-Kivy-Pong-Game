@@ -270,19 +270,8 @@ class PongGame(Widget):
         score = NumericProperty(0)
 
         def bounce_ball(self, ball):
-            # Paddle vertices
-            paddle_bottom_left = Vector(self.x, self.y)
-            paddle_bottom_right = Vector(self.right, self.y)
-            paddle_top_left = Vector(self.x, self.top)
-            paddle_top_right = Vector(self.right, self.top)
-
-            # Ball vertices
+            # Ball center vertex
             ball_center = Vector(ball.center_x, ball.center_y)
-            ball_radius = ball.height / 2
-            ball_center_left = Vector(ball.center_x - ball_radius, ball.center_y)
-            ball_center_right = Vector(ball.center_x + ball_radius, ball.center_y)
-            ball_center_bottom = Vector(ball.center_x, ball.center_y - ball_radius)
-            ball_center_top = Vector(ball.center_x, ball.center_y + ball_radius)
 
             # Ball velocity
             vx, vy = ball.velocity
