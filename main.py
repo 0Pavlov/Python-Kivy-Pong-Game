@@ -191,6 +191,8 @@ class PongGame(Widget):
             dt (delta-time): How often the screen updates
         """
         if self.state_game_started:
+            self.player.center_x = self.ball.center_x
+            self.opponent.center_x = self.ball.center_x
             # Moving the menu button away the screen during gameplay
             self.menu.x = 99999
 
@@ -294,7 +296,8 @@ class PongGame(Widget):
 
                 # Speed increase
                 speed_multiplier = 1.3  # Adjust this value for the desired speed increase
-                reflection *= speed_multiplier
+                if (reflection.y ** 2) ** (1 / 2) < self.height:
+                    reflection *= speed_multiplier
 
                 # Apply the reflected velocity to the ball
                 ball.velocity = reflection.x, reflection.y
