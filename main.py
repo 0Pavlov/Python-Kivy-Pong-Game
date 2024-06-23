@@ -276,6 +276,8 @@ class PongGame(Widget):
                 ball_pos_opponent_side = ball.y > self.parent.y + self.parent.height / 2
                 ball_center_above_player = ball.center_y > self.top
                 ball_center_above_opponent = ball.center_y < self.y
+                ball_center_right = ball.center_x > self.center_x
+                ball_center_left = ball.center_x < self.center_x
                 # Ball velocity
                 vx, vy = ball.velocity
                 # Adjust the horizontal bounce based on contact point
@@ -288,11 +290,21 @@ class PongGame(Widget):
                         vy = (vy ** 2) ** (1 / 2)  # Make positive
                         bounced = Vector(vx, vy)
                         # Speed up on each bounce
-                        vel = bounced * 1.1 if vy < 10 else bounced
+                        vel = bounced * 1.1 if vy < 7 else bounced
                         # Apply changes
                         ball.velocity = vel.x, vel.y + offset
-                    elif not ball_center_above_player:
-                        pass
+                    elif ball_center_right:
+                        # Reverse horizontal velocity
+                        vx = (vx ** 2) ** (1 / 2)  # Make positive
+                        bounced = Vector(vx, vy)
+                        # Apply changes
+                        ball.velocity = bounced.x, bounced.y
+                    elif ball_center_left:
+                        # Reverse horizontal velocity
+                        vx = ((vx ** 2) ** (1 / 2)) * -1  # Make negative
+                        bounced = Vector(vx, vy)
+                        # Apply changes
+                        ball.velocity = bounced.x, bounced.y
 
                 # Opponent side of the screen
                 elif ball_pos_opponent_side:
@@ -301,11 +313,21 @@ class PongGame(Widget):
                         vy = ((vy ** 2) ** (1 / 2)) * -1  # Make negative
                         bounced = Vector(vx, vy)
                         # Speed up on each bounce
-                        vel = bounced * 1.1 if vy > -10 else bounced
+                        vel = bounced * 1.1 if vy > -7 else bounced
                         # Apply changes
                         ball.velocity = vel.x, vel.y + offset
-                    elif not ball_center_above_opponent:
-                        pass
+                    elif ball_center_right:
+                        # Reverse horizontal velocity
+                        vx = (vx ** 2) ** (1 / 2)  # Make positive
+                        bounced = Vector(vx, vy)
+                        # Apply changes
+                        ball.velocity = bounced.x, bounced.y
+                    elif ball_center_left:
+                        # Reverse horizontal velocity
+                        vx = ((vx ** 2) ** (1 / 2)) * -1  # Make negative
+                        bounced = Vector(vx, vy)
+                        # Apply changes
+                        ball.velocity = bounced.x, bounced.y
 
 
 # App class (build method should return root widget object)
