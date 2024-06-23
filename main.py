@@ -270,64 +270,47 @@ class PongGame(Widget):
         score = NumericProperty(0)
 
         def bounce_ball(self, ball):
+            # Paddle vertices
+            paddle_bottom_left = Vector(self.x, self.y)
+            paddle_bottom_right = Vector(self.right, self.y)
+            paddle_top_left = Vector(self.x, self.top)
+            paddle_top_right = Vector(self.right, self.top)
+
+            # Ball vertices
+            ball_center = Vector(ball.center_x, ball.center_y)
+            ball_radius = ball.height / 2
+            ball_center_left = Vector(ball.center_x - ball_radius, ball.center_y)
+            ball_center_right = Vector(ball.center_x + ball_radius, ball.center_y)
+            ball_center_bottom = Vector(ball.center_x, ball.center_y - ball_radius)
+            ball_center_top = Vector(ball.center_x, ball.center_y + ball_radius)
+
+            # Ball velocity
+            vx, vy = ball.velocity
+
             if self.collide_widget(ball):
-                # Pos bools
-                ball_pos_player_side = ball.y < self.parent.y + self.parent.height / 2
-                ball_pos_opponent_side = ball.y > self.parent.y + self.parent.height / 2
-                ball_center_above_player = ball.center_y > self.top
-                ball_center_above_opponent = ball.center_y < self.y
-                ball_center_right = ball.center_x > self.center_x
-                ball_center_left = ball.center_x < self.center_x
-                # Ball velocity
-                vx, vy = ball.velocity
-                # Adjust the horizontal bounce based on contact point
-                offset = (ball.center_y - self.center_y) / (self.height / 2)
+                # Find the closest point on the paddle to the ball's center
+                closest_point = self.get_closest_point(ball_center)
 
-                # Player side of the screen
-                if ball_pos_player_side:
-                    if ball_center_above_player:
-                        # Reverse vertical velocity
-                        vy = (vy ** 2) ** (1 / 2)  # Make positive
-                        bounced = Vector(vx, vy)
-                        # Speed up on each bounce
-                        vel = bounced * 1.1 if vy < 7 else bounced
-                        # Apply changes
-                        ball.velocity = vel.x, vel.y + offset
-                    elif ball_center_right:
-                        # Reverse horizontal velocity
-                        vx = (vx ** 2) ** (1 / 2)  # Make positive
-                        bounced = Vector(vx, vy)
-                        # Apply changes
-                        ball.velocity = bounced.x, bounced.y
-                    elif ball_center_left:
-                        # Reverse horizontal velocity
-                        vx = ((vx ** 2) ** (1 / 2)) * -1  # Make negative
-                        bounced = Vector(vx, vy)
-                        # Apply changes
-                        ball.velocity = bounced.x, bounced.y
+                # Calculate the collision normal vector
+                normal = (ball_center - closest_point).normalize()
 
-                # Opponent side of the screen
-                elif ball_pos_opponent_side:
-                    if ball_center_above_opponent:
-                        # Reverse vertical velocity
-                        vy = ((vy ** 2) ** (1 / 2)) * -1  # Make negative
-                        bounced = Vector(vx, vy)
-                        # Speed up on each bounce
-                        vel = bounced * 1.1 if vy > -7 else bounced
-                        # Apply changes
-                        ball.velocity = vel.x, vel.y + offset
-                    elif ball_center_right:
-                        # Reverse horizontal velocity
-                        vx = (vx ** 2) ** (1 / 2)  # Make positive
-                        bounced = Vector(vx, vy)
-                        # Apply changes
-                        ball.velocity = bounced.x, bounced.y
-                    elif ball_center_left:
-                        # Reverse horizontal velocity
-                        vx = ((vx ** 2) ** (1 / 2)) * -1  # Make negative
-                        bounced = Vector(vx, vy)
-                        # Apply changes
-                        ball.velocity = bounced.x, bounced.y
+                # Calculate the relative velocity of the ball to the paddle
+                relative_velocity = Vector(vx, vy)  # Assuming the paddle is stationary
+
+                # Calculate the dot product of the relative velocity and the normal
+                dot_product = relative_velocity.dot(normal)
+
+                # Reflect the relative velocity across the collision normal
+                reflection = relative_velocity - 2 * dot_product * normal
+
+                # Apply the reflected velocity to the ball
+                ball.velocity = reflection.x, reflection.y
+
+        def get_closest_point(self, point):
+            """Finds the closest point on the paddle's rectangle to a given point."""
+            closest_x = max(self.x, min(point.x, self.right))
+            closest_y = max(self.y, min(point.y, self.top))
+            return Vector(closest_x, closest_y)
 
 
 # App class (build method should return root widget object)
