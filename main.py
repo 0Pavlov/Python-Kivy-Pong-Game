@@ -191,8 +191,6 @@ class PongGame(Widget):
             dt (delta-time): How often the screen updates
         """
         if self.state_game_started:
-            self.player.center_x = self.ball.center_x
-            self.opponent.center_x = self.ball.center_x
             # Moving the menu button away the screen during gameplay
             self.menu.x = 99999
 
