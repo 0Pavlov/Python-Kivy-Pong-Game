@@ -303,6 +303,10 @@ class PongGame(Widget):
                 # Reflect the relative velocity across the collision normal
                 reflection = relative_velocity - 2 * dot_product * normal
 
+                # Speed increase
+                speed_multiplier = 1.1  # Adjust this value for the desired speed increase
+                reflection *= speed_multiplier
+
                 # Apply the reflected velocity to the ball
                 ball.velocity = reflection.x, reflection.y
 
