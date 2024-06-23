@@ -271,20 +271,41 @@ class PongGame(Widget):
 
         def bounce_ball(self, ball):
             if self.collide_widget(ball):
+                # Pos bools
+                ball_pos_player_side = ball.y < self.parent.y + self.parent.height / 2
+                ball_pos_opponent_side = ball.y > self.parent.y + self.parent.height / 2
+                ball_center_above_player = ball.center_y > self.top
+                ball_center_above_opponent = ball.center_y < self.y
                 # Ball velocity
                 vx, vy = ball.velocity
-
                 # Adjust the horizontal bounce based on contact point
                 offset = (ball.center_y - self.center_y) / (self.height / 2)
 
-                # Reverse vertical velocity
-                bounced = Vector(vx, vy * -1)
+                # Player side of the screen
+                if ball_pos_player_side:
+                    if ball_center_above_player:
+                        # Reverse vertical velocity
+                        vy = (vy ** 2) ** (1 / 2)  # Make positive
+                        bounced = Vector(vx, vy)
+                        # Speed up on each bounce
+                        vel = bounced * 1.1 if vy < 10 else bounced
+                        # Apply changes
+                        ball.velocity = vel.x, vel.y + offset
+                    elif not ball_center_above_player:
+                        pass
 
-                # Speed up on each bounce
-                vel = bounced * 1.1
-
-                # Apply changes
-                ball.velocity = vel.x, vel.y + offset
+                # Opponent side of the screen
+                elif ball_pos_opponent_side:
+                    if ball_center_above_opponent:
+                        # Reverse vertical velocity
+                        vy = ((vy ** 2) ** (1 / 2)) * -1  # Make negative
+                        bounced = Vector(vx, vy)
+                        # Speed up on each bounce
+                        vel = bounced * 1.1 if vy > -10 else bounced
+                        # Apply changes
+                        ball.velocity = vel.x, vel.y + offset
+                    elif not ball_center_above_opponent:
+                        pass
 
 
 # App class (build method should return root widget object)
