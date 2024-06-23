@@ -192,7 +192,7 @@ class PongGame(Widget):
         """
         if self.state_game_started:
             # Moving the menu button away the screen during gameplay
-            self.menu.x = 99999
+            self.menu.x = self.width
 
             # Move the ball each frame
             self.ball.move()
@@ -294,7 +294,7 @@ class PongGame(Widget):
 
                 # Speed increase
                 speed_multiplier = 1.3  # Adjust this value for the desired speed increase
-                if (reflection.y ** 2) ** (1 / 2) < self.height:
+                if abs(reflection.y) < self.height:
                     reflection *= speed_multiplier
 
                 # Apply the reflected velocity to the ball
