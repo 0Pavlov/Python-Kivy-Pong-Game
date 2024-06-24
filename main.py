@@ -236,10 +236,17 @@ class PongGame(Widget):
 
     # Make paddles movable
     def on_touch_move(self, touch):
-        if touch.y < self.height / 2:
-            self.player.center_x = touch.x
-        if touch.y > self.height - self.height / 2:
-            self.opponent.center_x = touch.x
+        touch_player_side = touch.y < self.height / 2
+        touch_opponent_side = touch.y > self.height / 2
+        ball_to_player_distance = abs(self.ball.center_y) - abs(self.player.top)
+        ball_to_opponent_distance = abs(self.opponent.y) - abs(self.ball.center_y)
+        ball_radius = self.ball.height / 2
+        if touch_player_side:
+            if ball_to_player_distance > ball_radius:
+                self.player.center_x = touch.x
+        elif touch_opponent_side:
+            if ball_to_opponent_distance > ball_radius:
+                self.opponent.center_x = touch.x
 
     # Register the touch for the menu button
     def on_touch_down(self, touch):
