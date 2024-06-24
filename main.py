@@ -241,6 +241,8 @@ class PongGame(Widget):
         ball_to_player_distance = abs(self.ball.center_y) - abs(self.player.top)
         ball_to_opponent_distance = abs(self.opponent.y) - abs(self.ball.center_y)
         ball_radius = self.ball.height / 2
+
+        # Restrict paddle movement to avoid tunneling
         if touch_player_side:
             if ball_to_player_distance > ball_radius:
                 self.player.center_x = touch.x
