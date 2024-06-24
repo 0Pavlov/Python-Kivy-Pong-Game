@@ -10,6 +10,7 @@ from kivy.properties import (
 )
 from kivy.vector import Vector
 from kivy.clock import Clock
+from kivy.animation import Animation
 
 Builder.load_string(
     """
@@ -252,12 +253,14 @@ class PongGame(Widget):
 
     # Register the touch for the menu button
     def on_touch_down(self, touch):
+        anim = Animation(x=self.x - self.menu.width, duration=0.1, t='in_out_back')
         if self.menu.collide_point(*touch.pos):
             # Update the game state
             self.state_game_started = True
             # Reset the scores
             self.opponent.score = 0
             self.player.score = 0
+            anim.start(self.menu)
 
     class Menu(Widget):
         color = ListProperty([0, 0, 0, 0])
