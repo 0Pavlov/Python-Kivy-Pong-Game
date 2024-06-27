@@ -258,7 +258,7 @@ class PongGame(Widget):
             size=(self.width, self.width),
             center=self.center,
             t='in_back',
-            duration=0.4,
+            duration=0.2,
         )
         if self.menu.collide_point(*touch.pos):
             # Animation
