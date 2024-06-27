@@ -192,8 +192,9 @@ class PongGame(Widget):
             dt (delta-time): How often the screen updates
         """
         if self.state_game_started:
-            # Moving the menu button away the screen during gameplay
+            # Reset menu size and move away the screen
             self.menu.x = self.width
+            self.menu.size = self.width / 4, self.width / 4
 
             # Move the ball each frame
             self.ball.move()
@@ -253,14 +254,20 @@ class PongGame(Widget):
 
     # Register the touch for the menu button
     def on_touch_down(self, touch):
-        anim = Animation(x=self.x - self.menu.width, duration=0.1, t='in_out_back')
+        anim = Animation(
+            size=(self.width, self.width),
+            center=self.center,
+            t='in_back',
+            duration=0.4,
+        )
         if self.menu.collide_point(*touch.pos):
-            # Update the game state
-            self.state_game_started = True
+            # Animation
+            anim.start(self.menu)
             # Reset the scores
             self.opponent.score = 0
             self.player.score = 0
-            anim.start(self.menu)
+            # Update the game state
+            self.state_game_started = True
 
     class Menu(Widget):
         color = ListProperty([0, 0, 0, 0])
