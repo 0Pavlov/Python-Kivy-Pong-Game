@@ -2,16 +2,18 @@
 
 ![banner](https://github.com/0Pavlov/Python-Kivy-Pong-Game/blob/master/sources/assets/banner.png)
 
-# Description:
+</div>
+
+## Description:
 
 ### This Python project brings the classic game of Pong to life using the Kivy framework, allowing for head-to-head competition on a single device. 
 
-# Project Goals:
+## Project Goals:
 
   - Improve my current Python knowledge.
   - Learn a new framework (Kivy, in this case) for my upcoming CS50 Python project.
 
-# What Is Achieved:
+## What Is Achieved:
 
   - Solid Fundamentals: Well-structured code with clear separation of concerns using Kivy's Widget classes for game elements (paddles, ball, and score displays).
   - Engaging Gameplay: Smooth ball movement, collision detection for realistic bounces, and score tracking.
