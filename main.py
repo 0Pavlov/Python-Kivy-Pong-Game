@@ -25,7 +25,6 @@ Builder.load_string(
         Ellipse:
             size: self.size
             pos: self.pos
-
 <PongBall>:
     size: self.size
     canvas:
@@ -34,7 +33,6 @@ Builder.load_string(
         Ellipse:
             pos: self.pos
             size: self.size
-
 <PongPaddle>:
     id: pong_paddle
     score: root.score
@@ -44,7 +42,6 @@ Builder.load_string(
         Rectangle:
             pos: self.pos
             size: self.size
-
 <PongGame>:
     ball: pong_ball
     player: player
@@ -60,7 +57,6 @@ Builder.load_string(
             id: player_background
             pos: 0, 0  # Screen bottom half
             size: self.width, self.height / 2
-
         # Opponent background
         Color:
             rgba: 1, 1, 1, 1
@@ -69,7 +65,6 @@ Builder.load_string(
             id: opponent_background
             pos: 0, self.height / 2 # Screen top half
             size: self.width, self.height / 2
-
         # Screen center line (debug)
         Color:
             rgba: 1, 0, 0, 0
@@ -77,7 +72,6 @@ Builder.load_string(
             id: split_line
             pos: self.width / 2, self.y
             size: 1, self.height
-
     # Score labels        
     Label:
         id: player_score
@@ -89,7 +83,6 @@ Builder.load_string(
         # Vertical position relative to the half of the screen
         y: root.y + self.height
         text: str(root.player.score)
-
     Label:
         id: opponent_score
         color: 0, 0, 0, 1
@@ -100,14 +93,12 @@ Builder.load_string(
         # Vertical position relative to the half of the screen
         y: root.height - self.height * 2
         text: str(root.opponent.score)
-
     # Ball
     PongBall:
         id: pong_ball
         center: self.parent.center
         # Size relative to the size of the screen
         size: self.parent.height / 30, self.parent.height / 30
-
     # Paddles
     PongPaddle:
         id: player
@@ -117,7 +108,6 @@ Builder.load_string(
         # Vertical position relative to the player score
         y: player_score.top + player_score.height
         color: 1, 1, 1, 1
-
     PongPaddle:
         id: opponent
         # Size relative to the half of the screen
@@ -126,7 +116,6 @@ Builder.load_string(
         # Vertical position relative to the opponent score
         top: opponent_score.y - opponent_score.height
         color: 0, 0, 0, 1
-
     # Menu
     Menu:
         id: menu
@@ -165,13 +154,12 @@ class PongGame(Widget):
         Clock.schedule_once(self.center_ball_on_init, 0.4)
         self.serve_ball(vel=(4, -4))  # Initial serve
         # Send notification
-        notification.notify('Official project page:', 'https://github.com/0Pavlov/Python-Kivy-Pong-Game')
+        notification.notify('Official project page:', 'github.com/0Pavlov/Python-Kivy-Pong-Game')
 
     # noinspection PyUnusedLocal
     def center_ball_on_init(self, dt):
         """
         Center the ball
-
         Args:
             dt(float): delta time parameter, used during the __init__
         """
@@ -180,7 +168,6 @@ class PongGame(Widget):
     def serve_ball(self, vel=(4, 4)):
         """
         Serve the ball to some direction
-
         Args:
             vel (tuple): Direction to serve the ball
         """
@@ -191,7 +178,6 @@ class PongGame(Widget):
     def update(self, dt):
         """
         Update the screen each time Apps Clock inside the build method, ticks
-
         Args:
             dt (delta-time): How often the screen updates
         """
@@ -216,11 +202,11 @@ class PongGame(Widget):
 
             # Ball collision with the top or bottom of the screen
             if self.ball.top > self.top:  # Top
-                vibrator.vibrate(100)
+                vibrator.vibrate(time=0.08)
                 self.player.score += 1
                 self.serve_ball(vel=(4, 4))
             if self.ball.y < self.y:  # Bottom
-                vibrator.vibrate(100)
+                vibrator.vibrate(time=0.08)
                 self.opponent.score += 1
                 self.serve_ball(vel=(4, -4))
 
