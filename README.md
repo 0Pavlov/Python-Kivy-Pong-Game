@@ -1,3 +1,7 @@
+<div align="center">
+
+![banner](https://github.com/0Pavlov/Python-Kivy-Pong-Game/blob/master/sources/assets/banner.png)
+
 # Description:
 
 ### This Python project brings the classic game of Pong to life using the Kivy framework, allowing for head-to-head competition on a single device. 
