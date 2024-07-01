@@ -196,6 +196,9 @@ class PongGame(Widget):
             self.menu.x = self.width
             self.menu.size = self.width / 4, self.width / 4
 
+            # Reset menu color
+            self.menu.color = [0.2, 0.2, 0.2, 0.5]
+
             # Move the ball each frame
             self.ball.move()
 
@@ -255,10 +258,11 @@ class PongGame(Widget):
     # Register the touch for the menu button
     def on_touch_down(self, touch):
         anim = Animation(
-            size=(self.width, self.width),
-            center=self.center,
-            t='in_back',
-            duration=0.2,
+            size=(self.ball.width * 1.5, self.ball.width * 1.5),
+            color=(0, 0, 0, 0),
+            center=self.ball.center,
+            t='in_out_cubic',
+            duration=0.7,
         )
         if self.menu.collide_point(*touch.pos):
             # Animation
