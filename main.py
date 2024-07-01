@@ -11,6 +11,8 @@ from kivy.properties import (
 from kivy.vector import Vector
 from kivy.clock import Clock
 from kivy.animation import Animation
+from plyer import vibrator
+from plyer import notification
 
 Builder.load_string(
     """
@@ -162,6 +164,8 @@ class PongGame(Widget):
         """
         Clock.schedule_once(self.center_ball_on_init, 0.4)
         self.serve_ball(vel=(4, -4))  # Initial serve
+        # Send notification
+        notification.notify('Official project page:', 'https://github.com/0Pavlov/Python-Kivy-Pong-Game')
 
     # noinspection PyUnusedLocal
     def center_ball_on_init(self, dt):
@@ -212,11 +216,13 @@ class PongGame(Widget):
 
             # Ball collision with the top or bottom of the screen
             if self.ball.top > self.top:  # Top
-                self.serve_ball(vel=(4, 4))
+                vibrator.vibrate(100)
                 self.player.score += 1
+                self.serve_ball(vel=(4, 4))
             if self.ball.y < self.y:  # Bottom
-                self.serve_ball(vel=(4, -4))
+                vibrator.vibrate(100)
                 self.opponent.score += 1
+                self.serve_ball(vel=(4, -4))
 
             # Change ball color based on its position
             if self.ball.center_y > self.center_y:
