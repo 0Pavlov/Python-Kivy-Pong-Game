@@ -1,18 +1,17 @@
-from kivy.app import App
-from kivy.uix.widget import Widget
+from kivy.animation import Animation
 # noinspection PyProtectedMember
-from kivy.app import Builder
+from kivy.app import App, Builder
+from kivy.clock import Clock
 from kivy.properties import (
     NumericProperty,
     ReferenceListProperty,
     ObjectProperty,
     ListProperty,
 )
+from kivy.uix.widget import Widget
 from kivy.vector import Vector
-from kivy.clock import Clock
-from kivy.animation import Animation
-from plyer import vibrator
-from plyer import notification
+
+from plyer import notification, vibrator
 
 Builder.load_string(
     """
