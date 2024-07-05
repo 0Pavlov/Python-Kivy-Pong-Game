@@ -144,21 +144,28 @@ class PongGame(Widget):
 
     def __init__(self, **kwargs):
         super(PongGame, self).__init__(**kwargs)
-        """
-        Call the center_ball_on_init function only after the layout is calculated.
-        The ball serving is scheduled for the next frame using Clock.schedule_once()
-        to ensure that it happens after the initial layout is calculated. This
-        prevents issues with incorrect ball positioning.
+        """Initializes the PongGame instance.
+
+        Centers the ball using `center_ball_on_init()` after the layout calculation 
+        completes to ensure correct ball positioning. This is achieved by scheduling 
+        `center_ball_on_init()` for the next frame using `Clock.schedule_once()`.
+
+        Serves the ball using `serve_ball()`.
+
+        Sends the notification to the user.
         """
         Clock.schedule_once(self.center_ball_on_init, 0.4)
-        self.serve_ball(vel=(4, -4))  # Initial serve
+        # Initial serve
+        self.serve_ball(vel=(4, -4))
         # Send notification
-        notification.notify('Official project page:', 'github.com/0Pavlov/Python-Kivy-Pong-Game')
+        notification.notify(
+            "Official project page:", "github.com/0Pavlov/Python-Kivy-Pong-Game"
+        )
 
     # noinspection PyUnusedLocal
     def center_ball_on_init(self, dt):
-        """
-        Center the ball
+        """Centers the ball
+
         Args:
             dt(float): delta time parameter, used during the __init__
         """
