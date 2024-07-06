@@ -184,7 +184,7 @@ class PongGame(Widget):
         self.ball.velocity = vel
 
     # noinspection PyUnusedLocal
-    def update(self, dt):
+    def update(self, dt: float) -> None:
         """Updates the game state.
 
         Moves the ball, checks for collisions, updates scores, and handles game logic.
@@ -244,12 +244,11 @@ class PongGame(Widget):
                 elif self.opponent.score == 3:
                     pass
 
-    # Make paddles movable
     def on_touch_move(self, touch) -> None:
-        """Handles touch drag event.
+        """Moves the paddles.
 
         Moves paddles based on touch position and restricts movement to prevent
-        tunneling.
+        tunneling. Utilizes Kivy touch detection for that matter.
 
         Args:
             touch (kivy.input.motionevent.MotionEvent): The touch event.
@@ -268,12 +267,11 @@ class PongGame(Widget):
             if ball_to_opponent_distance > ball_radius:
                 self.opponent.center_x = touch.x
 
-    # Register the touch for the menu button
     def on_touch_down(self, touch) -> None:
-        """Handles touch down event.
+        """Detects menu touch.
 
         Registers the touch for the menu button and updates the game state if the menu
-        is touched.
+        is touched. Utilizes Kivy touch detection for that matter.
 
         Args: touch (kivy.input.motionevent.MotionEvent): The touch event.
         """
@@ -332,7 +330,8 @@ class PongGame(Widget):
                 normal = (ball_center - closest_point).normalize()
 
                 # Calculate the relative velocity of the ball to the paddle
-                relative_velocity = Vector(vx, vy)  # Assuming the paddle is stationary
+                # Assuming the paddle is stationary
+                relative_velocity = Vector(vx, vy)
 
                 # Calculate the dot product of the relative velocity and the normal
                 dot_product = relative_velocity.dot(normal)
@@ -349,7 +348,7 @@ class PongGame(Widget):
                 # Apply the reflected velocity to the ball
                 ball.velocity = reflection.x, reflection.y
 
-        def get_closest_point(self, point) -> Vector:
+        def get_closest_point(self, point: Vector) -> Vector:
             """Finds the closest point on the paddle's rectangle to a given point.
 
             Args:
@@ -363,7 +362,6 @@ class PongGame(Widget):
             return Vector(closest_x, closest_y)
 
 
-# App class (build method should return root widget object)
 class PongApp(App):
     def build(self) -> PongGame:
         """Builds the Pong game application.
@@ -371,7 +369,7 @@ class PongApp(App):
         Initializes the game and sets the update interval.
 
         Returns:
-             PongGame: The game instance.
+             PongGame: The game instance. Root widget object.
         """
         game = PongGame()
         Clock.schedule_interval(game.update, 1.0 / 120.0)
