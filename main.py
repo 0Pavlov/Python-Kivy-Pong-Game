@@ -143,17 +143,17 @@ class PongGame(Widget):
     state_game_started = False
 
     def __init__(self, **kwargs):
-        super(PongGame, self).__init__(**kwargs)
         """Initializes the PongGame instance.
 
-        Centers the ball using `center_ball_on_init()` after the layout calculation 
-        completes to ensure correct ball positioning. This is achieved by scheduling 
+        Centers the ball using `center_ball_on_init()` after the layout calculation
+        completes to ensure correct ball positioning. This is achieved by scheduling
         `center_ball_on_init()` for the next frame using `Clock.schedule_once()`.
 
         Serves the ball using `serve_ball()`.
 
-        Sends the notification to the user.
+        Sends the notification to the user about the project page.
         """
+        super(PongGame, self).__init__(**kwargs)
         Clock.schedule_once(self.center_ball_on_init, 0.4)
         # Initial serve
         self.serve_ball(vel=(4, -4))
@@ -163,19 +163,22 @@ class PongGame(Widget):
         )
 
     # noinspection PyUnusedLocal
-    def center_ball_on_init(self, dt):
-        """Centers the ball
+    def center_ball_on_init(self, dt: float) -> None:
+        """Centers the ball.
 
         Args:
-            dt(float): delta time parameter, used during the __init__
+            dt (float): Delta time parameter, used during the `__init__` for being able
+            to schedule functions.
         """
         self.ball.center = self.center
 
-    def serve_ball(self, vel=(4, 4)):
-        """
-        Serve the ball to some direction
+    def serve_ball(self, vel: tuple = (4, 4)) -> None:
+        """Serves the ball.
+
+        Serves the ball from the center of the screen with a given velocity.
+
         Args:
-            vel (tuple): Direction to serve the ball
+            vel (tuple, optional): Velocity of the ball. Defaults to (4, 4).
         """
         self.ball.center = self.center
         self.ball.velocity = vel
