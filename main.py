@@ -185,10 +185,14 @@ class PongGame(Widget):
 
     # noinspection PyUnusedLocal
     def update(self, dt):
-        """
-        Update the screen each time Apps Clock inside the build method, ticks
+        """Updates the game state.
+
+        Moves the ball, checks for collisions, updates scores, and handles game logic.
+        Updates the screen each time `PongApp()`s `Clock.schedule_interval()` inside
+        the `build()` method ticks.
+
         Args:
-            dt (delta-time): How often the screen updates
+            dt (float): Delta time parameter.
         """
         if self.state_game_started:
             # Reset menu size and move away the screen
@@ -241,7 +245,15 @@ class PongGame(Widget):
                     pass
 
     # Make paddles movable
-    def on_touch_move(self, touch):
+    def on_touch_move(self, touch) -> None:
+        """Handles touch drag event.
+
+        Moves paddles based on touch position and restricts movement to prevent
+        tunneling.
+
+        Args:
+            touch (kivy.input.motionevent.MotionEvent): The touch event.
+        """
         touch_player_side = touch.y < self.height / 2
         touch_opponent_side = touch.y > self.height / 2
         ball_to_player_distance = abs(self.ball.center_y) - abs(self.player.top)
@@ -257,7 +269,14 @@ class PongGame(Widget):
                 self.opponent.center_x = touch.x
 
     # Register the touch for the menu button
-    def on_touch_down(self, touch):
+    def on_touch_down(self, touch) -> None:
+        """Handles touch down event.
+
+        Registers the touch for the menu button and updates the game state if the menu
+        is touched.
+
+        Args: touch (kivy.input.motionevent.MotionEvent): The touch event.
+        """
         anim = Animation(
             size=(self.ball.width * 1.5, self.ball.width * 1.5),
             color=(0, 0, 0, 0),
@@ -283,17 +302,22 @@ class PongGame(Widget):
         velocity_y = NumericProperty(0)
         velocity = ReferenceListProperty(velocity_x, velocity_y)
 
-        def move(self):
-            """
-            Move the ball from the current position with the current velocity
-            """
+        def move(self) -> None:
+            """Moves the ball based on its current velocity."""
             self.pos = Vector(*self.pos) + self.velocity
 
     class PongPaddle(Widget):
         color = ListProperty([1, 0, 0, 1])
         score = NumericProperty(0)
 
-        def bounce_ball(self, ball):
+        def bounce_ball(self, ball) -> None:
+            """Bounces the ball off the paddle.
+
+            Calculates the collision and adjusts the ball's velocity accordingly.
+
+            Args:
+                ball (PongBall): The ball to bounce
+            """
             # Ball center vertex
             ball_center = Vector(ball.center_x, ball.center_y)
 
@@ -317,15 +341,23 @@ class PongGame(Widget):
                 reflection = relative_velocity - 2 * dot_product * normal
 
                 # Speed increase
-                speed_multiplier = 1.2  # Adjust this value for the desired speed increase
+                # Adjust this value for the desired speed increase
+                speed_multiplier = 1.2
                 if abs(reflection.y) < self.height:
                     reflection *= speed_multiplier
 
                 # Apply the reflected velocity to the ball
                 ball.velocity = reflection.x, reflection.y
 
-        def get_closest_point(self, point):
-            """Finds the closest point on the paddle's rectangle to a given point."""
+        def get_closest_point(self, point) -> Vector:
+            """Finds the closest point on the paddle's rectangle to a given point.
+
+            Args:
+                point (Vector): The point to find the closest point to.
+
+            Returns:
+                Vector: The closest point on the paddle.
+            """
             closest_x = max(self.x, min(point.x, self.right))
             closest_y = max(self.y, min(point.y, self.top))
             return Vector(closest_x, closest_y)
@@ -333,7 +365,14 @@ class PongGame(Widget):
 
 # App class (build method should return root widget object)
 class PongApp(App):
-    def build(self):
+    def build(self) -> PongGame:
+        """Builds the Pong game application.
+
+        Initializes the game and sets the update interval.
+
+        Returns:
+             PongGame: The game instance.
+        """
         game = PongGame()
         Clock.schedule_interval(game.update, 1.0 / 120.0)
         return game
