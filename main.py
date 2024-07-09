@@ -135,7 +135,16 @@ Builder.load_string(
 
 class PongGame(Widget):
     """Main game class for the Game. This class contains all the game logic and serves
-    as the root widget."""
+    as the root widget.
+
+    Attributes:
+        ball (ObjectProperty): The pong ball used in the game.
+        player (ObjectProperty): The player's paddle.
+        opponent (ObjectProperty): The opponent's paddle.
+        menu (ObjectProperty): The game menu.
+        state_game_started (bool): The state of the game, indicating whether the game
+        has started.
+    """
 
     ball = ObjectProperty(None)
     player = ObjectProperty(None)
@@ -295,12 +304,24 @@ class PongGame(Widget):
             self.state_game_started = True
 
     class Menu(Widget):
-        """Represents the game menu widget."""
+        """Represents the game menu widget.
+
+        Attributes:
+            color (ListProperty): The color of the widget.
+        """
 
         color = ListProperty([0, 0, 0, 0])
 
     class PongBall(Widget):
-        """Represents the pong ball."""
+        """Represents the pong ball.
+
+        Attributes:
+        color (ListProperty): The color of the ball.
+        velocity_x (NumericProperty): The velocity of the ball in the x direction.
+        velocity_y (NumericProperty): The velocity of the ball in the y direction.
+        velocity (ReferenceListProperty): The combined velocity of the ball in both
+        directions.
+        """
 
         color = ListProperty([0, 0, 0, 0])
         velocity_x = NumericProperty(0)
@@ -312,7 +333,14 @@ class PongGame(Widget):
             self.pos = Vector(*self.pos) + self.velocity
 
     class PongPaddle(Widget):
-        """Represents a pong paddle."""
+        """Represents a pong paddle.
+
+        Inherits from Kivy's Widget class to handle positioning and rendering.
+
+        Attributes:
+            color (ListProperty): The paddle's color (default: red).
+            score (NumericProperty): The player's current score.
+        """
 
         color = ListProperty([1, 0, 0, 1])
         score = NumericProperty(0)
@@ -372,7 +400,16 @@ class PongGame(Widget):
 
 
 class PongApp(App):
-    """Pong game application class."""
+    """Main application class for the Pong game.
+
+    This class is responsible for setting up the game window and initializing the game
+    logic. It inherits from Kivy's App class, which provides the main event loop and
+    window management.
+
+    Methods:
+        build(): Initializes the game by creating an instance of PongGame and scheduling
+        the game's update method to be called at regular intervals.
+    """
 
     def build(self) -> PongGame:
         """Builds the Pong game application.
