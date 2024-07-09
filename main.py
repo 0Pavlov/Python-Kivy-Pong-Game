@@ -1,5 +1,3 @@
-import platform
-
 from kivy.animation import Animation
 # noinspection PyProtectedMember
 from kivy.app import App, Builder
