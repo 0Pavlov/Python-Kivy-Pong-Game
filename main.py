@@ -1,3 +1,5 @@
+import platform
+
 from kivy.animation import Animation
 # noinspection PyProtectedMember
 from kivy.app import App, Builder
@@ -226,13 +228,28 @@ class PongGame(Widget):
 
             # Ball collision with the top or bottom of the screen
             if self.ball.top > self.top:  # Top
-                vibrator.vibrate(time=0.08)
-                self.player.score += 1
-                self.serve_ball(vel=(4, 4))
+                try:
+                    vibrator.vibrate(time=0.08)
+                except (NotImplementedError, ModuleNotFoundError):
+                    print(
+                        "Ball hit the top.",
+                        "Bzzzz: vibration not supported on your device ;((",
+                    )
+                finally:
+                    self.player.score += 1
+                    self.serve_ball(vel=(4, 4))
+
             if self.ball.y < self.y:  # Bottom
-                vibrator.vibrate(time=0.08)
-                self.opponent.score += 1
-                self.serve_ball(vel=(4, -4))
+                try:
+                    vibrator.vibrate(time=0.08)
+                except (NotImplementedError, ModuleNotFoundError):
+                    print(
+                        "Ball hit the bottom.",
+                        "Bzzzz: vibration not supported on your device ;((",
+                    )
+                finally:
+                    self.opponent.score += 1
+                    self.serve_ball(vel=(4, -4))
 
             # Change ball color based on its position
             if self.ball.center_y > self.center_y:
