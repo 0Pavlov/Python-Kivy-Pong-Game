@@ -133,9 +133,10 @@ Builder.load_string(
 )
 
 
-# Main game class (all game logic goes here)
-# Serves as the root widget
 class PongGame(Widget):
+    """Main game class for the Game. This class contains all the game logic and serves
+    as the root widget."""
+
     ball = ObjectProperty(None)
     player = ObjectProperty(None)
     opponent = ObjectProperty(None)
@@ -159,7 +160,8 @@ class PongGame(Widget):
         self.serve_ball(vel=(4, -4))
         # Send notification
         notification.notify(
-            "Official project page:", "github.com/0Pavlov/Python-Kivy-Pong-Game"
+            title="Official project page:",
+            message="github.com/0Pavlov/Python-Kivy-Pong-Game",
         )
 
     # noinspection PyUnusedLocal
@@ -195,7 +197,7 @@ class PongGame(Widget):
             dt (float): Delta time parameter.
         """
         if self.state_game_started:
-            # Reset menu size and move away the screen
+            # Reset menu size and move off the screen
             self.menu.x = self.width
             self.menu.size = self.width / 4, self.width / 4
 
@@ -235,7 +237,7 @@ class PongGame(Widget):
                 self.ball.color = [0, 0, 0, 0]
                 # Update the game state
                 self.state_game_started = False
-                # Bring the menu back from the out the screen
+                # Bring the menu back from out of the screen
                 self.menu.center = self.center
                 # Do something if player wins
                 if self.player.score == 3:
@@ -273,7 +275,8 @@ class PongGame(Widget):
         Registers the touch for the menu button and updates the game state if the menu
         is touched. Utilizes Kivy touch detection for that matter.
 
-        Args: touch (kivy.input.motionevent.MotionEvent): The touch event.
+        Args:
+            touch (kivy.input.motionevent.MotionEvent): The touch event.
         """
         anim = Animation(
             size=(self.ball.width * 1.5, self.ball.width * 1.5),
@@ -292,9 +295,13 @@ class PongGame(Widget):
             self.state_game_started = True
 
     class Menu(Widget):
+        """Represents the game menu widget."""
+
         color = ListProperty([0, 0, 0, 0])
 
     class PongBall(Widget):
+        """Represents the pong ball."""
+
         color = ListProperty([0, 0, 0, 0])
         velocity_x = NumericProperty(0)
         velocity_y = NumericProperty(0)
@@ -305,6 +312,8 @@ class PongGame(Widget):
             self.pos = Vector(*self.pos) + self.velocity
 
     class PongPaddle(Widget):
+        """Represents a pong paddle."""
+
         color = ListProperty([1, 0, 0, 1])
         score = NumericProperty(0)
 
@@ -314,7 +323,7 @@ class PongGame(Widget):
             Calculates the collision and adjusts the ball's velocity accordingly.
 
             Args:
-                ball (PongBall): The ball to bounce
+                ball (PongBall): The ball to bounce.
             """
             # Ball center vertex
             ball_center = Vector(ball.center_x, ball.center_y)
@@ -363,6 +372,8 @@ class PongGame(Widget):
 
 
 class PongApp(App):
+    """Pong game application class."""
+
     def build(self) -> PongGame:
         """Builds the Pong game application.
 
