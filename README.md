@@ -3,12 +3,8 @@
 ![banner](https://github.com/0Pavlov/Python-Kivy-Pong-Game/blob/master/sources/assets/banner.png)
 
 </div>
-<div align="left">
-  
-![Static Badge](https://img.shields.io/badge/DOWNLOAD-APK%20v0.1.2-white?style=for-the-badge&logo=android&logoColor=white&logoSize=auto&labelColor=black&link=https%3A%2F%2Fgithub.com%2F0Pavlov%2FPython-Kivy-Pong-Game%2Freleases%2Fdownload%2Fv0.1.2%2FPongGame-v0.1.2.apk)
-
-</div>
-
+ 
+[![Static Badge](https://img.shields.io/badge/DOWNLOAD-APK%20v0.1.2-white?style=for-the-badge&logo=android&logoColor=white&logoSize=auto&labelColor=black&link=**https://github.com/0Pavlov/Python-Kivy-Pong-Game/releases/download/v0.1.2/PongGame-v0.1.2.apk**)](https://github.com/0Pavlov/Python-Kivy-Pong-Game/releases/download/v0.1.2/PongGame-v0.1.2.apk)
 
 ## Description:
 
