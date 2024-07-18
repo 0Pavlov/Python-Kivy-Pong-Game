@@ -294,14 +294,33 @@ class PongGame(Widget):
         ball_to_player_distance = abs(self.ball.center_y) - abs(self.player.top)
         ball_to_opponent_distance = abs(self.opponent.y) - abs(self.ball.center_y)
         ball_radius = self.ball.height / 2
+        half_paddle = self.player.width / 2
+        touch_scope = self.x + half_paddle < touch.x < self.right - half_paddle
+        out_of_scope_left = self.x + half_paddle > touch.x
+        out_of_scope_right = touch.x > self.right - half_paddle
 
-        # Restrict paddle movement to avoid tunneling
         if touch_player_side:
+            # Restrict paddle movement to avoid tunneling
             if ball_to_player_distance > ball_radius:
-                self.player.center_x = touch.x
+                # Restrict paddle movement within screen borders
+                if touch_scope:
+                    self.player.center_x = touch.x
+                # Clip paddle to the screen border
+                elif out_of_scope_left:
+                    self.player.x = self.x
+                elif out_of_scope_right:
+                    self.player.right = self.right
         elif touch_opponent_side:
+            # Restrict paddle movement to avoid tunneling
             if ball_to_opponent_distance > ball_radius:
-                self.opponent.center_x = touch.x
+                # Restrict paddle movement within screen borders
+                if touch_scope:
+                    self.opponent.center_x = touch.x
+                # Clip paddle to the screen border
+                elif out_of_scope_left:
+                    self.opponent.x = self.x
+                elif out_of_scope_right:
+                    self.opponent.right = self.right
 
     def on_touch_down(self, touch) -> None:
         """Detects menu touch.
