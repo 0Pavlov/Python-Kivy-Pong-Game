@@ -164,14 +164,22 @@ class PongGame(Widget):
         Sends the notification to the user about the project page.
         """
         super(PongGame, self).__init__(**kwargs)
+
+        # Center the ball
         Clock.schedule_once(self.center_ball_on_init, 0.4)
+
+        # Send notification
+        try:
+            notification.notify(
+                app_name="Pong",
+                title="Official project page:",
+                message="github.com/0Pavlov/Python-Kivy-Pong-Game",
+            )
+        except Exception as e:
+            print(f"NotificationError: can't send the notification. {type(e)}")
+
         # Initial serve
         self.serve_ball(vel=(4, -4))
-        # Send notification
-        notification.notify(
-            title="Official project page:",
-            message="github.com/0Pavlov/Python-Kivy-Pong-Game",
-        )
 
     # noinspection PyUnusedLocal
     def center_ball_on_init(self, dt: float) -> None:
@@ -228,10 +236,11 @@ class PongGame(Widget):
             if self.ball.top > self.top:  # Top
                 try:
                     vibrator.vibrate(time=0.08)
-                except (NotImplementedError, ModuleNotFoundError):
+                except Exception as e:
                     print(
                         "Ball hit the top.",
                         "Bzzzz: vibration not supported on your device ;((",
+                        f"\n{type(e)}",
                     )
                 finally:
                     self.player.score += 1
@@ -240,10 +249,11 @@ class PongGame(Widget):
             if self.ball.y < self.y:  # Bottom
                 try:
                     vibrator.vibrate(time=0.08)
-                except (NotImplementedError, ModuleNotFoundError):
+                except Exception as e:
                     print(
                         "Ball hit the bottom.",
                         "Bzzzz: vibration not supported on your device ;((",
+                        f"\n{type(e)}",
                     )
                 finally:
                     self.opponent.score += 1
