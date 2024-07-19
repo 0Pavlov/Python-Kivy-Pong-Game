@@ -4,7 +4,7 @@
 
 </div>
  
-[![Static Badge](https://img.shields.io/badge/DOWNLOAD-APK%20v0.1.2-white?style=for-the-badge&logo=android&logoColor=white&logoSize=auto&labelColor=black&link=**https://github.com/0Pavlov/Python-Kivy-Pong-Game/releases/download/v0.1.2/PongGame-v0.1.2.apk**)](https://github.com/0Pavlov/Python-Kivy-Pong-Game/releases/download/v0.1.2/PongGame-v0.1.2.apk)
+[![Static Badge](https://img.shields.io/badge/DOWNLOAD-APK%20v0.1.3-white?style=for-the-badge&logo=android&logoColor=white&logoSize=auto&labelColor=black&link=**https://github.com/0Pavlov/Python-Kivy-Pong-Game/releases/download/v0.1.3/PongGame-v0.1.3.apk**)](https://github.com/0Pavlov/Python-Kivy-Pong-Game/releases/download/v0.1.3/PongGame-v0.1.3.apk)
 
 ## Description:
 
