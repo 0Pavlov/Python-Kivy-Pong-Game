@@ -166,7 +166,7 @@ class PongGame(Widget):
         super(PongGame, self).__init__(**kwargs)
 
         # Center the ball
-        Clock.schedule_once(self.center_ball_on_init, 0.4)
+        Clock.schedule_once(self.center_ball_on_init, 1.5)
 
         # Send notification
         try:
