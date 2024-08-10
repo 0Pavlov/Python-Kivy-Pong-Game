@@ -6,7 +6,7 @@
 
 ***This Python project brings the classic game of Pong to life using the Kivy framework, allowing for head-to-head competition on a single device.***
 
-[![Static Badge](https://img.shields.io/badge/DOWNLOAD-APK%20v0.1.3-white?style=for-the-badge&logo=android&logoColor=white&logoSize=auto&labelColor=black&link=**https://github.com/0Pavlov/Python-Kivy-Pong-Game/releases/download/v0.1.3/PongGame-v0.1.3.apk**)](https://github.com/0Pavlov/Python-Kivy-Pong-Game/releases/download/v0.1.3/PongGame-v0.1.3.apk)
+[![Static Badge](https://img.shields.io/badge/DOWNLOAD-APK%20v0.1.4-white?style=for-the-badge&logo=android&logoColor=white&logoSize=auto&labelColor=black&link=**https://github.com/0Pavlov/Python-Kivy-Pong-Game/releases/download/v0.1.4/PongGame-v0.1.4.apk**)](https://github.com/0Pavlov/Python-Kivy-Pong-Game/releases/download/v0.1.4/PongGame-v0.1.4.apk)
 
 </div> 
 
