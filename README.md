@@ -27,11 +27,6 @@
 
   - This Pong game significantly improved my ability to build functional and interactive applications using Python and Kivy.
 
-## Explore my other projects on GitHub:
-
-  - If I already done "Jena Music Voice Interface" project which I'm studying Kivy for, I recommend to check it as well.
-
-
 ## This Pong implementation was a great starting point for me to learn:
 
   - App development with Python and Kivy
